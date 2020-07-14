@@ -596,7 +596,7 @@
 export default {
   async asyncData({ $axios }) {
     const subscribersResp = await $axios.$get(
-      "api/subscribers/"
+      "/api/subscribers/"
     );
     console.log(JSON.stringify(subscribersResp));
     if ("error_message" in subscribersResp) {
@@ -626,7 +626,7 @@ export default {
       };
       let data = this;
       this.$axios
-        .$post("api/subscribers/", newSub)
+        .$post("/api/subscribers/", newSub)
         .then(function(response) {
           data.subscribers.push(newSub);
           data.newSubscriberName = "";
