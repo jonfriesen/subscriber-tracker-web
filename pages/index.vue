@@ -372,6 +372,26 @@
           <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
             <!-- Replace with your content -->
             <div class="flex flex-col">
+              <div v-if="noDatabase" class="rounded-md bg-yellow-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm leading-5 font-medium text-yellow-800">Warning,</h3>
+                    <div class="mt-2 text-sm leading-5 text-yellow-700">
+                      <p>{{ errorMessage }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- Analyitcs START -->
               <div class="mb-8">
                 <div
@@ -575,40 +595,42 @@
 <script>
 export default {
   async asyncData({ $axios }) {
-    const subscribers = await $axios.$get("http://127.0.0.1:8080/subscribers/");
-    return { subscribers };
+    const subscribersResp = await $axios.$get(
+      "http://127.0.0.1:8080/subscribers/"
+    );
+    console.log(JSON.stringify(subscribersResp));
+    if ("error_message" in subscribersResp) {
+      return {
+        noDatabase: true,
+        errorMessage: subscribersResp.error_message,
+        subscribers: []
+      };
+    }
+
+    return { subscribers: subscribersResp };
   },
   data() {
     return {
+      noDatabase: false,
       isErrored: false,
       errorMsg: "",
       newSubscriberName: "",
-      newSubscriberEmail: "",
-      subscribers: [
-        {
-          name: "Joe Smith",
-          email: "joe@test.com"
-        },
-        {
-          name: "Alice WAffle",
-          email: "alice@test.com"
-        }
-      ]
+      newSubscriberEmail: ""
     };
   },
   methods: {
     addSubscriber: function(event) {
       let newSub = {
-            name: this.newSubscriberName,
-            email: this.newSubscriberEmail
-          }
-      let data = this
+        name: this.newSubscriberName,
+        email: this.newSubscriberEmail
+      };
+      let data = this;
       this.$axios
         .$post("http://127.0.0.1:8080/subscribers/", newSub)
         .then(function(response) {
-            data.subscribers.push(newSub);
-            data.newSubscriberName = ""
-            data.newSubscriberEmail = ""
+          data.subscribers.push(newSub);
+          data.newSubscriberName = "";
+          data.newSubscriberEmail = "";
         })
         .catch(function(error) {
           alert(error);
