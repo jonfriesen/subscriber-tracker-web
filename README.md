@@ -1,4 +1,4 @@
-# sales-tracker
+# subscriber-tracker
 
 ## Build Setup
 
