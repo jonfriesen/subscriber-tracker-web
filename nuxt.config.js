@@ -54,6 +54,10 @@ export default {
   modules: [
     '@nuxtjs/axios',
   ],
+
+  axios: {
+    baseURL: '/'
+  },
   /*
   ** Build configuration
   ** See https://nuxtjs.org/api/configuration-build/
