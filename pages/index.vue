@@ -595,17 +595,27 @@
 <script>
 export default {
   async asyncData({ $axios }) {
-    const subscribersResp = await $axios.$get(
-      "/api/subscribers/"
-    );
-    console.log(JSON.stringify(subscribersResp));
-    if ("error_message" in subscribersResp) {
-      return {
-        noDatabase: true,
-        errorMessage: subscribersResp.error_message,
-        subscribers: []
-      };
+    let subscribers = [];
+    let subscribersResp;
+    try {
+      subscribersResp = await $axios.$get("subscribers/");
+    } catch (error) {
+      console.log(JSON.stringify(subscribersResp));
+      if (!!subscribersResp && "error_message" in subscribersResp) {
+        return {
+          noDatabase: true,
+          errorMessage: subscribersResp.error_message,
+          subscribers: []
+        };
+      } else {
+        return {
+          noDatabase: true,
+          errorMessage: "The API could not be reached.",
+          subscribers: []
+        };
+      }
     }
+    // const subscribersResp = await $axios.$get("subscribers/");
 
     return { subscribers: subscribersResp };
   },
@@ -626,7 +636,7 @@ export default {
       };
       let data = this;
       this.$axios
-        .$post("/api/subscribers/", newSub)
+        .$post("subscribers/", newSub)
         .then(function(response) {
           data.subscribers.push(newSub);
           data.newSubscriberName = "";

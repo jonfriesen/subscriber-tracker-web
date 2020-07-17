@@ -1,3 +1,4 @@
+let development = process.env.NODE_ENV !== 'production'
 
 export default {
   /*
@@ -56,7 +57,7 @@ export default {
   ],
 
   axios: {
-    baseURL: '/'
+    baseURL: development ? 'http://localhost:8080/' : '/api/'
   },
   /*
   ** Build configuration
