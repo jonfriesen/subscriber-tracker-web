@@ -615,8 +615,14 @@ export default {
         };
       }
     }
-    // const subscribersResp = await $axios.$get("subscribers/");
-
+    if (!!subscribersResp && !!subscribersResp.error_message) {
+      return {
+          noDatabase: true,
+          errorMessage: subscribersResp.error_message,
+          subscribers: []
+        };
+    }
+    
     return { subscribers: subscribersResp };
   },
   data() {
