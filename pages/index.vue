@@ -644,12 +644,11 @@ export default {
       this.$axios
         .$post("subscribers/", newSub)
         .then(function(response) {
-          data.subscribers.push(newSub);
+          data.subscribers.unshift(newSub);
           data.newSubscriberName = "";
           data.newSubscriberEmail = "";
         })
         .catch(function(error) {
-          alert(error);
           console.log(error);
         });
     }
