@@ -598,7 +598,7 @@ export default {
     let subscribers = [];
     let subscribersResp;
     try {
-      subscribersResp = await $axios.$get("subscribers/");
+      subscribersResp = await $axios.$get(`subscribers/?uniq=${(+new Date).toString(36)}`);
     } catch (error) {
       console.log(JSON.stringify(subscribersResp));
       if (!!subscribersResp && "error_message" in subscribersResp) {
