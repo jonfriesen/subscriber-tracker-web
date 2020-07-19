@@ -598,31 +598,27 @@ export default {
     let subscribers = [];
     let subscribersResp;
     try {
-      subscribersResp = await $axios.$get(`subscribers/?uniq=${(+new Date).toString(36)}`);
+      subscribersResp = await $axios.$get(
+        `subscribers/?uniq=${(+new Date()).toString(36)}`
+      );
     } catch (error) {
       console.log(JSON.stringify(subscribersResp));
-      if (!!subscribersResp && "error_message" in subscribersResp) {
-        return {
-          noDatabase: true,
-          errorMessage: subscribersResp.error_message,
-          subscribers: []
-        };
-      } else {
-        return {
-          noDatabase: true,
-          errorMessage: "The API could not be reached.",
-          subscribers: []
-        };
-      }
+
+      return {
+        noDatabase: true,
+        errorMessage: "The API could not be reached.",
+        subscribers: []
+      };
     }
+
     if (!!subscribersResp && !!subscribersResp.error_message) {
       return {
-          noDatabase: true,
-          errorMessage: subscribersResp.error_message,
-          subscribers: []
-        };
+        noDatabase: true,
+        errorMessage: subscribersResp.error_message,
+        subscribers: []
+      };
     }
-    
+
     return { subscribers: subscribersResp };
   },
   data() {
@@ -631,7 +627,8 @@ export default {
       isErrored: false,
       errorMsg: "",
       newSubscriberName: "",
-      newSubscriberEmail: ""
+      newSubscriberEmail: "",
+      subscribers: []
     };
   },
   methods: {
@@ -644,13 +641,37 @@ export default {
       this.$axios
         .$post("subscribers/", newSub)
         .then(function(response) {
-          data.subscribers.unshift(newSub);
+          // data.subscribers.unshift(newSub);
           data.newSubscriberName = "";
           data.newSubscriberEmail = "";
         })
         .catch(function(error) {
           console.log(error);
         });
+    }
+  },
+  created: function() {
+    let data = this;
+
+    // connect to websocket
+    if (window["WebSocket"]) {
+      var conn;
+      let bURL = process.env.apiBaseUrl === '' ? (document.location.host + "/api") : process.env.apiBaseUrl;
+      bURL += "/substream";
+      
+      conn = new WebSocket("ws://" + bURL);
+      conn.onclose = function(evt) {
+        console.log("WS Substream connection closed.");
+      };
+      conn.onmessage = function(evt) {
+        var messages = evt.data.split("\n");
+        for (var i = 0; i < messages.length; i++) {
+          console.log("WS received message " + messages[i]);
+          data.subscribers.unshift(JSON.parse(messages[i]));
+        }
+      };
+    } else {
+      console.log("WS Your browser does not support WebSockets.");
     }
   }
 };

@@ -27,6 +27,12 @@ export default {
     ]
   },
   /*
+  ** 
+  */
+  env: {
+    apiBaseUrl: development ? 'localhost:8080' : ''
+  },
+  /*
   ** Global CSS
   */
   css: [
