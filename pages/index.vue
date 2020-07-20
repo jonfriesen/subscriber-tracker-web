@@ -47,7 +47,7 @@
             <div class="absolute top-0 right-0 -mr-14 p-1">
               <button
                 class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600"
-                aria-label="Close sidebar"
+                aria-label="Close sidebar" @click="isOpen = !isOpen"
               >
                 <svg
                   class="h-6 w-6 text-white"
@@ -371,7 +371,7 @@
       <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
         <button
           class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:bg-gray-200 transition ease-in-out duration-150"
-          aria-label="Open sidebar"
+          aria-label="Open sidebar" @click="isOpen = true"
         >
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
@@ -643,6 +643,7 @@ export default {
   data() {
     return {
       isOpen: false,
+      isMenuOpen: false,
       noDatabase: false,
       isErrored: false,
       errorMsg: "",
