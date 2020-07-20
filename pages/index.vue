@@ -21,7 +21,7 @@
           leave-class="opacity-100"
           leave-to-class="opacity-0"
         >
-          <div class="fixed inset-0">
+          <div v-show="isOpen" class="fixed inset-0">
             <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
           </div>
         </transition>
@@ -43,7 +43,7 @@
           leave-class="translate-x-0"
           leave-to-class="-translate-x-full"
         >
-          <div class="relative flex-1 flex flex-col max-w-xs w-full bg-gray-800">
+          <div v-show="isOpen" class="relative flex-1 flex flex-col max-w-xs w-full bg-gray-800">
             <div class="absolute top-0 right-0 -mr-14 p-1">
               <button
                 class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600"
@@ -642,6 +642,7 @@ export default {
   },
   data() {
     return {
+      isOpen: false,
       noDatabase: false,
       isErrored: false,
       errorMsg: "",
