@@ -656,10 +656,14 @@ export default {
     // connect to websocket
     if (window["WebSocket"]) {
       var conn;
-      let bURL = process.env.apiBaseUrl === '' ? (document.location.host + "/api") : process.env.apiBaseUrl;
+      let bProtocol = process.env.apiBaseUrl === "" ? "wss" : "ws";
+      let bURL =
+        process.env.apiBaseUrl === ""
+          ? document.location.host + "/api"
+          : process.env.apiBaseUrl;
       bURL += "/substream";
-      
-      conn = new WebSocket("ws://" + bURL);
+
+      conn = new WebSocket(bProtocol + "://" + bURL);
       conn.onclose = function(evt) {
         console.log("WS Substream connection closed.");
       };
